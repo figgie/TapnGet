@@ -45,7 +45,7 @@ public class Upload extends Fragment {
         if (this.isVisible()) {
             // If we are becoming invisible, then...
             if (!isVisibleToUser) {
-                FAB_Status = false;
+                hideFAB();
             }
         }
     }
@@ -124,7 +124,6 @@ public class Upload extends Fragment {
     }
 
     private void expandFAB() {
-
 
         FrameLayout.LayoutParams layoutParams1 = (FrameLayout.LayoutParams) fabDevice.getLayoutParams();
         layoutParams1.bottomMargin += (int) (fabDevice.getWidth() * 1.5);

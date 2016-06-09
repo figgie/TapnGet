@@ -21,9 +21,9 @@ import java.net.URLEncoder;
 
 public class BackgroundTask extends AsyncTask<String,Void,String> {
 
-   Context ctx;
+    Context ctx;
     BackgroundTask(Context ctx){
-      this.ctx=ctx;
+        this.ctx=ctx;
     }
 
     @Override
@@ -34,11 +34,9 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params) {
 
-        String reg_url= "http://10.0.2.2/webapptrial/register.php";
-        String login_url= "http://10.0.2.2/webapptrial/login.php";
-
+        String reg_url= "http://www.learnapk.netai.net/register.php";
+        String login_url= "http://www.learnapk.netai.net/login.php";
         String method = params[0];
-
         if(method.equals("Register")){
 
             String fname=params[1];
@@ -52,28 +50,24 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
                 HttpURLConnection httpURLConnection =(HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
-                InputStream IS = httpURLConnection.getInputStream();
-
-                if(IS!=null){
-                    return "Account Exists Try again.";
-                }
-
                 OutputStream OS = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS,"UTF-8"));
-
                 String data = URLEncoder.encode("user_full_name","UTF-8")+"="+URLEncoder.encode(fname,"UTF-8")+"&"+
-                   URLEncoder.encode("user_username","UTF-8")+"="+URLEncoder.encode(uname,"UTF-8")+"&"+
-                   URLEncoder.encode("user_college_id","UTF-8")+"="+URLEncoder.encode(clgid,"UTF-8")+"&"+
-                   URLEncoder.encode("user_number","UTF-8")+"="+URLEncoder.encode(num,"UTF-8")+"&"+
-                   URLEncoder.encode("user_password","UTF-8")+"="+URLEncoder.encode(pass,"UTF-8");
-
+                        URLEncoder.encode("user_username","UTF-8")+"="+URLEncoder.encode(uname,"UTF-8")+"&"+
+                        URLEncoder.encode("user_college_id","UTF-8")+"="+URLEncoder.encode(clgid,"UTF-8")+"&"+
+                        URLEncoder.encode("user_number","UTF-8")+"="+URLEncoder.encode(num,"UTF-8")+"&"+
+                        URLEncoder.encode("user_password","UTF-8")+"="+URLEncoder.encode(pass,"UTF-8");
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 OS.close();
+                InputStream IS = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
+                String line;
+                line = bufferedReader.readLine();
                 IS.close();
 
-                return "Registration Success";
+                return line;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -89,7 +83,6 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
 
             try {
                 URL url = new URL(login_url);
-
                 HttpURLConnection httpURLConnection =(HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
@@ -98,7 +91,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
 
                 String data = URLEncoder.encode("user_user_name","UTF-8")+"="+URLEncoder.encode(uname,"UTF-8")+"&"+
-                   URLEncoder.encode("user_user_password","UTF-8")+"="+URLEncoder.encode(pwd,"UTF-8");
+                        URLEncoder.encode("user_user_password","UTF-8")+"="+URLEncoder.encode(pwd,"UTF-8");
 
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
@@ -106,11 +99,13 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
                 outputStream.close();
 
                 InputStream IS = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
+                String line;
+                line = bufferedReader.readLine();
+                bufferedReader.close();
                 IS.close();
-
-                Toast.makeText(ctx,"Log",Toast.LENGTH_SHORT).show();
-
-                return "Login Success";
+                httpURLConnection.disconnect();
+                return line;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -123,18 +118,28 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
     }
 
     @Override
-    protected void onProgressUpdate(Void... values) {
+    protected void onProgressUpdate(Void... values)
+    {
         super.onProgressUpdate(values);
     }
 
     @Override
     protected void onPostExecute(String result) {
+        if(result.equals("<h3>Database Connection Success... </h3>Registration Success")){
+            Toast.makeText(ctx,"Registration Success",Toast.LENGTH_LONG).show();
+        }
+        else if(result.equals("<h3>Database Connection Success... </h3>Login Failed... Try again!")){
+            Toast.makeText(ctx,"Login Failed... Try again!",Toast.LENGTH_LONG).show();
+        }
 
-          if(result.equals("Registration Success")){
-              Toast.makeText(ctx,result,Toast.LENGTH_LONG).show();
-          }
-       else{
-              Toast.makeText(ctx,result,Toast.LENGTH_LONG).show();
-          }
+        else if(result.equals("<h3>Database Connection Success... </h3>Account Exists")){
+            Toast.makeText(ctx,"Account Exists. Please try again!",Toast.LENGTH_LONG).show();
+        }
+
+        else {
+            Toast.makeText(ctx,"Login Success...",Toast.LENGTH_LONG).show();
+            Intent i = new Intent(ctx, MainActivity.class);
+            ctx.startActivity(i);
+        }
     }
 }

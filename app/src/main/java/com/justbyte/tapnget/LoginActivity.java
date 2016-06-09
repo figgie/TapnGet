@@ -91,8 +91,8 @@ public class LoginActivity extends AppCompatActivity {
             BackgroundTask backgroundtask = new BackgroundTask(this);
             backgroundtask.execute(method, uname, pwd);
 
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
+            //Intent i = new Intent(this, MainActivity.class);
+            //startActivity(i);
         }
     }
 
