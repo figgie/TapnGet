@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backrep">
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:background="@color/primary"
+        android:id="@+id/balance_view"
+        />
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/eu"
+        android:layout_alignBottom="@id/balance_view"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/balance_img"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/balance_img"
+        android:text="42"
+        android:textColor="@color/accent"
+        android:textSize="32sp"
+        android:layout_alignTop="@id/balance_img"
+        android:layout_marginTop="4dp"
+        android:paddingLeft="8dp"
+        android:id="@+id/balance_credits"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Print Credits \nRemaining"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:paddingLeft="8dp"
+        android:layout_toRightOf="@id/balance_credits"
+        android:layout_alignTop="@id/balance_credits" />
+
+
+
+    <android.support.v7.widget.CardView
+        xmlns:cardview="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="16dp"
+        android:id="@+id/balance_addCard"
+        android:layout_below="@id/balance_view"
+        cardview:cardCornerRadius="8dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recharge"
+                android:id="@+id/balance_addTV"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/balance_addTV"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:text="Jeet Chaudhiri - +91-XXXXXXXXXX"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+    <android.support.v7.widget.CardView
+        xmlns:cardview="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="16dp"
+        android:id="@+id/balance_rateCard"
+        android:layout_below="@id/balance_addCard"
+        cardview:cardCornerRadius="8dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rates"
+                android:id="@+id/balance_rateTV"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/balance_rateTV"
+                android:paddingTop="16dp"
+                android:paddingLeft="16dp"
+                android:text="Single Sided : 1 Print Credit / Page\n\nDouble Sided : 1.5 Print Credits / Page"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</RelativeLayout>
