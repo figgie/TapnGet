@@ -141,22 +141,4 @@
         android:layout_alignStart="@id/settings_generalCard" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/settings_generalCard"
-        android:weightSum="1"
-        android:padding="16dp">
-
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/upload_fab_scan"
-            android:src="@drawable/camera"
-            android:layout_gravity="center"
-            />
-
-
-    </LinearLayout>
-
 </RelativeLayout>
