@@ -27,7 +27,7 @@
         </activity>
 
         <activity
-            android:name=".registerTest"
+            android:name=".Register"
             android:label="Register"
             android:parentActivityName=".LoginActivity">
 

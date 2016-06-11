@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class registerTest extends AppCompatActivity {
+public class Register extends AppCompatActivity {
 
     EditText username,college_id,number,password;
     String   uname,clgid,num,pass;
