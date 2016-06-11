@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.rengwuxian.materialedittext.MaterialEditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -90,9 +101,6 @@ public class LoginActivity extends AppCompatActivity {
 
             BackgroundTask backgroundtask = new BackgroundTask(this);
             backgroundtask.execute(method, uname, pwd);
-
-            //Intent i = new Intent(this, MainActivity.class);
-            //startActivity(i);
         }
     }
 

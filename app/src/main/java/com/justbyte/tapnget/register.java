@@ -11,15 +11,14 @@ import android.widget.Toast;
 
 public class register extends AppCompatActivity {
 
-    EditText fullname,username,college_id,number,password;
-    String   fname,uname,clgid,num,pass;
+    EditText username,college_id,number,password;
+    String   uname,clgid,num,pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        fullname   = (EditText)findViewById(R.id.register_fullname);
         username   = (EditText)findViewById(R.id.register_username);
         college_id = (EditText)findViewById(R.id.register_college_id);
         number     = (EditText)findViewById(R.id.register_number);
@@ -34,9 +33,8 @@ public class register extends AppCompatActivity {
 
     }
 
-    public void onclickregisterbutton(View view){
+    public void onClickRegisterButton(View view){
 
-        fname = fullname.getText().toString();
         uname = username.getText().toString();
         clgid = college_id.getText().toString();
         num   = number.getText().toString();
@@ -44,7 +42,7 @@ public class register extends AppCompatActivity {
 
         String method="Register";
         BackgroundTask backgroundTask = new BackgroundTask(this);
-        backgroundTask.execute(method,fname,uname,clgid,num,pass);
+        backgroundTask.execute(method,uname,clgid,num,pass);
         finish();
     }
 }

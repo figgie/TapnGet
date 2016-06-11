@@ -140,5 +140,4 @@
         android:layout_alignLeft="@id/settings_generalCard"
         android:layout_alignStart="@id/settings_generalCard" />
 
-
 </RelativeLayout>

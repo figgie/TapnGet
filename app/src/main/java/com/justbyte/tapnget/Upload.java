@@ -43,7 +43,7 @@ public class Upload extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (this.isVisible()) {
-            // If we are becoming invisible, then...
+            FAB_Status = false;
             if (!isVisibleToUser) {
                 hideFAB();
             }

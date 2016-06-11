@@ -1,12 +1,9 @@
 package com.justbyte.tapnget;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.view.View;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -25,6 +22,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
     BackgroundTask(Context ctx){
         this.ctx=ctx;
     }
+    String uname,pwd;
 
     @Override
     protected void onPreExecute() {
@@ -34,26 +32,26 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
     @Override
     protected String doInBackground(String... params) {
 
+        String line="",response=null;
         String reg_url= "http://www.learnapk.netai.net/register.php";
         String login_url= "http://www.learnapk.netai.net/login.php";
         String method = params[0];
         if(method.equals("Register")){
 
-            String fname=params[1];
-            String uname=params[2];
-            String clgid=params[3];
-            String num=params[4];
-            String pass=params[5];
+            uname=params[1];
+            String clgid=params[2];
+            String num=params[3];
+            String pass=params[4];
 
             try {
                 URL url = new URL(reg_url);
                 HttpURLConnection httpURLConnection =(HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
                 OutputStream OS = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS,"UTF-8"));
-                String data = URLEncoder.encode("user_full_name","UTF-8")+"="+URLEncoder.encode(fname,"UTF-8")+"&"+
-                        URLEncoder.encode("user_username","UTF-8")+"="+URLEncoder.encode(uname,"UTF-8")+"&"+
+                String data = URLEncoder.encode("user_username","UTF-8")+"="+URLEncoder.encode(uname,"UTF-8")+"&"+
                         URLEncoder.encode("user_college_id","UTF-8")+"="+URLEncoder.encode(clgid,"UTF-8")+"&"+
                         URLEncoder.encode("user_number","UTF-8")+"="+URLEncoder.encode(num,"UTF-8")+"&"+
                         URLEncoder.encode("user_password","UTF-8")+"="+URLEncoder.encode(pass,"UTF-8");
@@ -63,12 +61,11 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
                 OS.close();
                 InputStream IS = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
-                String line;
-                line = bufferedReader.readLine();
+                while ((line = bufferedReader.readLine())!=null){
+                    response+=line;
+                }
+
                 IS.close();
-
-                return line;
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -78,8 +75,8 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
         }
 
         else if(method.equals("Login")){
-            String uname = params[1];
-            String pwd = params[2];
+            uname = params[1];
+            pwd = params[2];
 
             try {
                 URL url = new URL(login_url);
@@ -100,12 +97,13 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
 
                 InputStream IS = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
-                String line;
-                line = bufferedReader.readLine();
+                while ((line = bufferedReader.readLine())!=null){
+                    response+=line;
+                }
+
                 bufferedReader.close();
                 IS.close();
                 httpURLConnection.disconnect();
-                return line;
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -114,7 +112,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
             }
 
         }
-        return null;
+        return response;
     }
 
     @Override
@@ -125,21 +123,22 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        if(result.equals("<h3>Database Connection Success... </h3>Registration Success")){
-            Toast.makeText(ctx,"Registration Success",Toast.LENGTH_LONG).show();
+        if(result.equals("nullRegistration Success<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+            Toast.makeText(ctx,"Registration Success...",Toast.LENGTH_LONG).show();
         }
-        else if(result.equals("<h3>Database Connection Success... </h3>Login Failed... Try again!")){
-            Toast.makeText(ctx,"Login Failed... Try again!",Toast.LENGTH_LONG).show();
-        }
-
-        else if(result.equals("<h3>Database Connection Success... </h3>Account Exists")){
-            Toast.makeText(ctx,"Account Exists. Please try again!",Toast.LENGTH_LONG).show();
+        else if(result.equals("nullLogin Failed... Try again!\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+            Toast.makeText(ctx,"Login Failed Try again!",Toast.LENGTH_LONG).show();
         }
 
-        else {
+        else if(result.equals("nullLogin Success...\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
             Toast.makeText(ctx,"Login Success...",Toast.LENGTH_LONG).show();
             Intent i = new Intent(ctx, MainActivity.class);
+            i.putExtra("1stmssg",uname);
+            i.putExtra("2ndmssg",pwd);
             ctx.startActivity(i);
+
         }
+        else if(result.equals("nullRegistration Failed. User Exists<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->"))
+            Toast.makeText(ctx,"Registration Failed. User Exists.\nPlease Try Again!",Toast.LENGTH_SHORT).show();
     }
 }
