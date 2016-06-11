@@ -3,6 +3,7 @@ package com.justbyte.tapnget;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -124,6 +125,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
     @Override
     protected void onPostExecute(String result) {
         if(result.equals("nullRegistration Success<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+
             Toast.makeText(ctx,"Registration Success...",Toast.LENGTH_LONG).show();
         }
         else if(result.equals("nullLogin Failed... Try again!\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){

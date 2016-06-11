@@ -74,7 +74,7 @@ public class Upload extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (FAB_Status == false) {
+                if (!FAB_Status) {
                     //Display FAB menu
                     expandFAB();
                     FAB_Status = true;
@@ -131,7 +131,6 @@ public class Upload extends Fragment {
         fabDevice.startAnimation(show_fab_1);
         fabDevice.setClickable(true);
 
-        //Floating Action Button 2
         FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fabScan.getLayoutParams();
         layoutParams2.topMargin += (int) (fabScan.getWidth() * 1.5);
         fabScan.setLayoutParams(layoutParams2);
@@ -142,20 +141,12 @@ public class Upload extends Fragment {
 
     private void hideFAB() {
 
-       /* //Floating Action Button 1
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) b1.getLayoutParams();
-        layoutParams.bottomMargin -= (int) (b1.getWidth() * 1.5);
-        b1.setLayoutParams(layoutParams);
-        b1.startAnimation(hide_fab_1);
-        b1.setClickable(false); */
-
         FrameLayout.LayoutParams layoutParams1 = (FrameLayout.LayoutParams) fabDevice.getLayoutParams();
         layoutParams1.bottomMargin -= (int) (fabDevice.getWidth() * 1.5);
         fabDevice.setLayoutParams(layoutParams1);
         fabDevice.startAnimation(hide_fab_1);
         fabDevice.setClickable(false);
 
-        //Floating Action Button 2
         FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) fabScan.getLayoutParams();
         layoutParams2.topMargin -= (int) (fabScan.getWidth() * 1.5);
         fabScan.setLayoutParams(layoutParams2);

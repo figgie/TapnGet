@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">Tap\'n\'Get</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+
+    <!--Preferences-->
+    <string name="myPref">tapngetUserData</string>
+    <string name="myPrefUserName">userName</string>
+    <string name="myPrefCollegeID">college_id</string>
+    <string name="myPrefEmail">email</string>
+    <string name="myPrefNumber">number</string>
+    <string name="myPrefCredit">balance</string>
+
 
 
     <string name="sign_up_text"><![CDATA[<i>Don\'t have an account?  </i><u><b>Sign Up Here!</b></u>]]></string>

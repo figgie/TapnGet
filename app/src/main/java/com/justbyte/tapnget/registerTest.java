@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class register extends AppCompatActivity {
+public class registerTest extends AppCompatActivity {
 
     EditText username,college_id,number,password;
     String   uname,clgid,num,pass;
@@ -28,7 +28,9 @@ public class register extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if(ab!=null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
 
     }

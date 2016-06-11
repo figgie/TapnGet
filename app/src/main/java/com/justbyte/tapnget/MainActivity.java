@@ -1,5 +1,7 @@
 package com.justbyte.tapnget;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -38,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     String mssguser,mssgpwd,username,college_id,number,password,credit;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         mssgpwd = data.getString("2ndmssg");
 
 
-        new Getfromdatabase().execute();
+        new GetUserData().execute();
     }
 
 
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class Getfromdatabase extends AsyncTask<String,Void,String> {
+    class GetUserData extends AsyncTask<String,Void,String> {
 
         String json_url;
         String myJSON;
@@ -146,7 +151,9 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            response = response.substring(4);
+            if(response!=null) {
+                response = response.substring(4);
+            }
             return response;
         }
 
@@ -174,11 +181,29 @@ public class MainActivity extends AppCompatActivity {
                     password = jsonObject.getString("password");
                     credit = jsonObject.getString("balance");
 
+                    saveData(getString(R.string.myPrefUserName),username);
+                    saveData(getString(R.string.myPrefCollegeID),college_id);
+                    saveData(getString(R.string.myPrefNumber),number);
+                    saveData(getString(R.string.myPrefCredit), credit);
+
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void saveData(String dataTitle, String dataValue){
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.putString(dataTitle, dataValue);
+        edit.apply();
+    }
+
+    private String getData(String dataTitle){
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        return sharedPreferences.getString(dataTitle,"");
     }
 
 

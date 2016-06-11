@@ -5,32 +5,18 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.rengwuxian.materialedittext.MaterialEditText;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,12 +26,14 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     TextView signUp;
     String uname,pwd;
+    ViewGroup viewGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
 
         login      = (Button)findViewById(R.id.button);
         username   = (EditText)findViewById(R.id.login_id);
@@ -62,10 +50,11 @@ public class LoginActivity extends AppCompatActivity {
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-        if(!(networkInfo!=null && networkInfo.isConnected())){
+        if (!(networkInfo!=null && networkInfo.isConnected())) {
             signUp.setEnabled(false);
             login.setEnabled(false);
-            Toast.makeText(getApplicationContext(),"No Internet Access.Please try again", Toast.LENGTH_SHORT).show();
+
+            Snackbar.make(viewGroup,"No Internet Access. Please try again",Snackbar.LENGTH_SHORT).show();
         }
 
         signUp.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void register (View view){
-        Intent i = new Intent(this,register.class);
+        Intent i = new Intent(this,registerTest.class);
         startActivity(i);
     }
 
@@ -94,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         pwd = password.getText().toString();
 
         if(uname.isEmpty() || pwd.isEmpty()){
-            Toast.makeText(getApplicationContext(),"Please enter credentials",Toast.LENGTH_SHORT).show();
+            Snackbar.make(viewGroup, "Please enter credentials", Snackbar.LENGTH_SHORT).show();
         }
         else {
             String method = "Login";
