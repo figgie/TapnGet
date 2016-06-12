@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.justbyte.tapnget.Register"
-    android:background="@drawable/backrep">
+    android:background="@drawable/backrep"
+    >
 
 
     <android.support.v7.widget.Toolbar
@@ -17,61 +18,116 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-
-    <EditText
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/register_username"
-        android:layout_marginTop="75dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="User Name"/>
-
-    <EditText
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/register_college_id"
-        android:layout_below="@+id/register_username"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="College ID"
-        android:textColorHint="#FFF"
-        android:textColor="#FFF"/>
-
-    <EditText
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/register_number"
-        android:layout_below="@+id/register_college_id"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="Mobile Number"
-        android:textColorHint="#FFF"
-        android:textColor="#FFF"/>
-
-    <EditText
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/register_password"
-        android:layout_below="@+id/register_number"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:hint="Password"
-        android:textColorHint="#FFF"
-        android:textColor="#FFF"/>
-
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register"
-        android:id="@+id/register_button"
-        android:layout_below="@+id/register_password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="54dp"
-        android:onClick="onClickRegisterButton" />
+        android:layout_above="@+id/register_rl1"
+        android:text="WELCOME"
+        android:id="@+id/register_welcomeText"
+        android:textSize="32sp"
+        android:layout_marginBottom="30dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"/>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/register_rl1"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        >
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:hint="User Name"
+            android:id="@+id/register_tilUsername"
+            android:layout_centerHorizontal="true"
+            >
+
+            <EditText
+                android:id="@+id/register_username"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textColor="@color/primary_text_alt"
+                android:inputType="textNoSuggestions" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:hint="Password"
+            android:id="@+id/register_tilPassword"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/register_tilUsername"
+            >
+
+            <EditText
+                android:id="@+id/register_password"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textColor="@color/primary_text_alt"
+                android:inputType="textNoSuggestions" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:hint="College ID"
+            android:id="@+id/register_tilCollegeID"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/register_tilPassword"
+            >
+
+            <EditText
+                android:id="@+id/register_college_id"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textColor="@color/primary_text_alt"
+                android:inputType="textNoSuggestions" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:hint="Mobile Number"
+            android:id="@+id/register_tilNumber"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/register_tilCollegeID"
+            >
+
+            <EditText
+                android:id="@+id/register_number"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textColor="@color/primary_text_alt"
+                android:inputType="phone" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="REGISTER"
+            android:textSize="16sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/register_tilNumber"
+            android:layout_marginTop="16dp"
+            android:id="@+id/register_button"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

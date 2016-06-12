@@ -122,6 +122,12 @@ public class Settings extends Fragment {
 
     private boolean updateData(){
         //Update the user's data on the database
+        String newUserName = userName.getText().toString();
+        String newPhone    = userName.getText().toString();
+
+        String userPassword = getData(getString(R.string.myPrefPassword));
+
+        //if not successful then return false
         return true;
     }
 

@@ -6,6 +6,7 @@
     <!--Preferences-->
     <string name="myPref">tapngetUserData</string>
     <string name="myPrefUserName">userName</string>
+    <string name="myPrefPassword">password</string>
     <string name="myPrefCollegeID">college_id</string>
     <string name="myPrefEmail">email</string>
     <string name="myPrefNumber">number</string>

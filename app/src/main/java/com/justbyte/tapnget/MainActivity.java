@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
                     saveData(getString(R.string.myPrefCollegeID),college_id);
                     saveData(getString(R.string.myPrefNumber),number);
                     saveData(getString(R.string.myPrefCredit), credit);
+                    saveData(getString(R.string.myPrefPassword), password);
 
                 }
             } catch (JSONException e) {
