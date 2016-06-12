@@ -1,0 +1,144 @@
+package com.justbyte.tapnget;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+
+public class UpdatePassword extends AppCompatActivity {
+
+    EditText update_password;
+    EditText confirm_update_password;
+    String changed_password, updatepwd_url = "http://learnapk.netai.net/update_password.php";
+    Context ctx;
+    String userCollegeID, line="", response= null;
+    boolean check;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_update_password);
+
+        update_password = (EditText)findViewById(R.id.new_passsword);
+        confirm_update_password = (EditText)findViewById(R.id.comfirm_new_password);
+        String upd,cupd;
+        upd =update_password.getText().toString();
+        cupd = confirm_update_password.getText().toString();
+        if(!upd.equals(cupd)){
+            Toast.makeText(ctx,"Passwords Dont Match",Toast.LENGTH_LONG).show();
+        }
+        else{
+              changed_password = cupd;
+            userCollegeID = getData(getString(R.string.myPrefCollegeID));
+            new UPDATEPASSWORD().execute();
+            if (check){
+                saveData(getString(R.string.myPrefPassword,changed_password));
+                Toast.makeText(ctx,"Password Updated",Toast.LENGTH_LONG);
+                Intent i = new Intent(ctx,MainActivity.class);
+                startActivity(i);
+            }
+            else {
+                Toast.makeText(ctx,"Could not update.Try again!",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
+    public void saveData(String dataTitle, String dataValue) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.putString(dataTitle, dataValue);
+        edit.apply();
+    }
+
+
+    public String getData(String dataTitle) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        return sharedPreferences.getString(dataTitle, "");
+    }
+
+
+    class UPDATEPASSWORD extends AsyncTask<String, Void, String> {
+
+         Context c;
+
+         @Override
+         protected void onPreExecute() {
+             super.onPreExecute();
+         }
+
+         @Override
+         protected String doInBackground(String... params) {
+
+             String method = params[0];
+             try {
+                 URL url = new URL(updatepwd_url);
+                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                 httpURLConnection.setRequestMethod("POST");
+                 httpURLConnection.setDoOutput(true);
+                 httpURLConnection.setDoInput(true);
+                 OutputStream outputStream = httpURLConnection.getOutputStream();
+                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+
+                 String data = URLEncoder.encode("user_user_name", "UTF-8") + "=" + URLEncoder.encode(userCollegeID, "UTF-8") + "&" +
+                         URLEncoder.encode("user_user_password", "UTF-8") + "=" + URLEncoder.encode(changed_password, "UTF-8");
+
+                 bufferedWriter.write(data);
+                 bufferedWriter.flush();
+                 bufferedWriter.close();
+                 outputStream.close();
+
+                 InputStream IS = httpURLConnection.getInputStream();
+                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS, "iso-8859-1"));
+                 while ((line = bufferedReader.readLine()) != null) {
+                     response += line;
+                 }
+
+                 bufferedReader.close();
+                 IS.close();
+                 httpURLConnection.disconnect();
+
+             } catch (MalformedURLException e) {
+                 e.printStackTrace();
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+
+             return response;
+         }
+
+         @Override
+         protected void onProgressUpdate(Void... values) {
+             super.onProgressUpdate(values);
+         }
+
+         @Override
+         protected void onPostExecute(String s) {
+             if (s.equals("nullUPDATED\t")){
+                 check = true;
+             }
+             else if(s.equals("nullCould not Update\t")){
+                 check= false;
+             }
+         }
+     }
+
+}

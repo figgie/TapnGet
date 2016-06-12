@@ -13,10 +13,9 @@
     <string name="myPrefCredit">balance</string>
 
 
-
     <string name="sign_up_text"><![CDATA[<i>Don\'t have an account?  </i><u><b>Sign Up Here!</b></u>]]></string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_main">MainActivity</string>
 </resources>
