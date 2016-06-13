@@ -31,8 +31,6 @@
                 android:value=".LoginActivity"></meta-data>
         </activity>
 
-        <activity android:name=".UpdatePassword"
-            android:label="Update Password"></activity>
     </application>
 
 </manifest>
