@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -18,14 +19,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+
 
 public class LoginActivity extends AppCompatActivity {
 
     Button login;
     EditText username;
     EditText password;
-    TextView signUp;
-    String uname,pwd;
+    TextView signUp, forgot_password;
+    String uname,pwd,frgtpwd;
+    String line="",response=null;
     ViewGroup viewGroup;
 
     @Override
@@ -39,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         username   = (EditText)findViewById(R.id.login_id);
         password   = (EditText)findViewById(R.id.login_password);
         signUp     = (TextView)findViewById(R.id.login_singUp);
-
+        forgot_password = (TextView)findViewById(R.id.forgot_password_link);
         TextInputLayout textInputLayout = (TextInputLayout)findViewById(R.id.login_tilPassword);
 
 
@@ -71,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     public void register (View view){
@@ -90,6 +105,63 @@ public class LoginActivity extends AppCompatActivity {
 
             BackgroundTask backgroundtask = new BackgroundTask(this);
             backgroundtask.execute(method, uname, pwd);
+        }
+    }
+
+    public void onclickforgotpassword(View view){
+        frgtpwd= forgot_password.getText().toString();
+        forgotpass fp = new forgotpass();
+        fp.execute();
+    }
+
+    class forgotpass extends AsyncTask<String,Void,String>{
+
+       String forgot_pass_url = "http://www.learnapk.netai.net/forgot_password.php"; //Still need to work on php script.
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                URL url = new URL(forgot_pass_url);
+                HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream OS = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS,"UTF-8"));
+                String data = URLEncoder.encode("user_username","UTF-8")+"="+URLEncoder.encode(frgtpwd,"UTF-8");
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                OS.close();
+                InputStream IS = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
+                while ((line = bufferedReader.readLine())!=null){
+                    response+=line;
+                }
+
+                IS.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(String aVoid) {
+            super.onPostExecute(aVoid);
         }
     }
 
