@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     saveData(getString(R.string.myPrefCredit), credit);
                     saveData(getString(R.string.myPrefPassword), password);
 
+                    Log.e("N",number);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

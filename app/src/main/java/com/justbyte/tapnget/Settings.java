@@ -36,7 +36,7 @@ public class Settings extends Fragment {
     EditText userName, phone, email;
     Button save, updatePassword;
     Context ctx;
-    boolean check;
+    boolean check=false;
     String newUserName;
     String newPhone;
     String userPassword;
@@ -101,6 +101,8 @@ public class Settings extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
                 save.setEnabled(true);
                 save.setBackgroundColor(getResources().getColor(R.color.accent));
             }
@@ -113,21 +115,13 @@ public class Settings extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateData();
 
-                if (check) {
-                    saveData(getString(R.string.myPrefUserName), userName.getText().toString());
-                    saveData(getString(R.string.myPrefNumber), phone.getText().toString());
+                newUserName = userName.getText().toString();
+                newPhone    = phone.getText().toString();
 
-                    Snackbar.make(view, "Updated!", Snackbar.LENGTH_SHORT).show();
+                UPDATEDATA updatedata =  new UPDATEDATA();
+                updatedata.execute();
 
-                } else if (!check) {
-                    userName.setText(getData(getString(R.string.myPrefUserName)));
-                    phone.setText(getData(getString(R.string.myPrefNumber)));
-
-                    Snackbar.make(view, "Unable to save. Try again later!", Snackbar.LENGTH_SHORT).show();
-
-                }
                 save.setEnabled(false);
                 save.setBackgroundColor(Color.GRAY);
 
@@ -150,10 +144,24 @@ public class Settings extends Fragment {
 
 
     private void updateData() {
-        //Update the user's data on the database
-        //call class instance
-        new UPDATEDATA().execute();
-        //if not successful then return false
+
+        if (check) {
+            saveData(getString(R.string.myPrefUserName), userName.getText().toString());
+            saveData(getString(R.string.myPrefNumber), phone.getText().toString());
+
+            Snackbar.make(view, "Updated!", Snackbar.LENGTH_SHORT).show();
+            Log.e("w","wat");
+
+        } else{
+            userName.setText(getData(getString(R.string.myPrefUserName)));
+            phone.setText(getData(getString(R.string.myPrefNumber)));
+
+            Snackbar.make(view, "Unable to save. Try again later!", Snackbar.LENGTH_SHORT).show();
+            Log.e("w", "mo");
+
+
+        }
+
     }
 
     private void saveData(String dataTitle, String dataValue) {
@@ -163,7 +171,6 @@ public class Settings extends Fragment {
         edit.putString(dataTitle, dataValue);
         edit.apply();
     }
-
 
     private String getData(String dataTitle) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
@@ -227,12 +234,16 @@ public class Settings extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
+
+            Log.e("S",s);
             if (s.equals("nullUPDATED\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
-             check = true;
+                check = true;
             }
             else if(s.equals("nullCould not Update\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->\"")){
                 check= false;
             }
+
+            updateData();
         }
     }
 }

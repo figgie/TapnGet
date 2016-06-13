@@ -89,7 +89,7 @@ public class UpdatePassword extends AppCompatActivity {
 
     class UPDATEPASSWORD extends AsyncTask<String, Void, String> {
 
-         Context c;
+         Context c = getApplicationContext();
 
          @Override
          protected void onPreExecute() {
