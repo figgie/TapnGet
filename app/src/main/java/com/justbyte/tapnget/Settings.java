@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,9 +120,10 @@ public class Settings extends Fragment {
                     saveData(getString(R.string.myPrefNumber), phone.getText().toString());
 
                     Snackbar.make(view, "Updated!", Snackbar.LENGTH_SHORT).show();
+
                 } else if (!isUpdate) {
-                    userName.setText(getString(R.string.myPrefUserName));
-                    phone.setText(getString(R.string.myPrefNumber));
+                    userName.setText(getData(getString(R.string.myPrefUserName)));
+                    phone.setText(getData(getString(R.string.myPrefNumber)));
 
                     Snackbar.make(view, "Unable to save. Try again later!", Snackbar.LENGTH_SHORT).show();
 
@@ -135,11 +137,11 @@ public class Settings extends Fragment {
         updatePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(getActivity().getApplicationContext(),UpdatePassword.class);
+                Log.e("V", "W");
 
-                Intent i = new Intent(ctx,UpdatePassword.class);
                 startActivity(i);
-                //Snackbar snackbar = Snackbar.make(view, "Clicked", Snackbar.LENGTH_SHORT);
-                //snackbar.show();
+
             }
         });
 

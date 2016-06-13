@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ public class UpdatePassword extends AppCompatActivity {
     String changed_password, updatepwd_url = "http://learnapk.netai.net/update_password.php";
     Context ctx;
     String userCollegeID, line="", response= null;
+    String upd,cupd;
     boolean check;
 
 
@@ -36,33 +40,48 @@ public class UpdatePassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_password);
 
+        ctx = getApplicationContext();
+        Log.e("V","V");
+
         update_password = (EditText)findViewById(R.id.new_passsword);
         confirm_update_password = (EditText)findViewById(R.id.comfirm_new_password);
-        String upd,cupd;
-        upd =update_password.getText().toString();
-        cupd = confirm_update_password.getText().toString();
-        if(!upd.equals(cupd)){
-            Toast.makeText(ctx,"Passwords Dont Match",Toast.LENGTH_LONG).show();
-        }
-        else{
-              changed_password = cupd;
-            userCollegeID = getData(getString(R.string.myPrefCollegeID));
-            new UPDATEPASSWORD().execute();
-            if (check){
-                saveData(getString(R.string.myPrefPassword,changed_password));
-                Toast.makeText(ctx,"Password Updated",Toast.LENGTH_LONG);
-                Intent i = new Intent(ctx,MainActivity.class);
-                startActivity(i);
+
+        Button button = (Button)findViewById(R.id.new_password_button);
+
+
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upd = update_password.getText().toString();
+                cupd = confirm_update_password.getText().toString();
+
+                if (!upd.equals(cupd)) {
+                    Toast.makeText(ctx, "Passwords Dont Match", Toast.LENGTH_LONG).show();
+                } else {
+                    changed_password = cupd;
+                    userCollegeID = getData(getString(R.string.myPrefCollegeID));
+
+                    new UPDATEPASSWORD().execute();
+
+                    if (check) {
+                        saveData(getString(R.string.myPrefPassword), changed_password);
+                        Toast.makeText(ctx, "Password Updated", Toast.LENGTH_LONG);
+                        Intent i = new Intent(ctx, MainActivity.class);
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(ctx, "Could not update.Try again!", Toast.LENGTH_LONG).show();
+                    }
+                }
             }
-            else {
-                Toast.makeText(ctx,"Could not update.Try again!",Toast.LENGTH_LONG).show();
-            }
-        }
+        });
+
+
     }
 
 
     public void saveData(String dataTitle, String dataValue) {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
 
         edit.putString(dataTitle, dataValue);
@@ -71,7 +90,7 @@ public class UpdatePassword extends AppCompatActivity {
 
 
     public String getData(String dataTitle) {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
         return sharedPreferences.getString(dataTitle, "");
     }
 
@@ -88,7 +107,6 @@ public class UpdatePassword extends AppCompatActivity {
          @Override
          protected String doInBackground(String... params) {
 
-             String method = params[0];
              try {
                  URL url = new URL(updatepwd_url);
                  HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
