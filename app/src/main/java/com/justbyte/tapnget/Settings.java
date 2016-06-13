@@ -156,7 +156,6 @@ public class Settings extends Fragment {
         //if not successful then return false
     }
 
-
     private void saveData(String dataTitle, String dataValue) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
         SharedPreferences.Editor edit = sharedPreferences.edit();
