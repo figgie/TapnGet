@@ -152,9 +152,7 @@ public class Settings extends Fragment {
     private void updateData() {
         //Update the user's data on the database
         //call class instance
-        String method = "update data";
-        UPDATEDATA updatedata = new UPDATEDATA(ctx);
-        updatedata.execute(method);
+        new UPDATEDATA().execute();
         //if not successful then return false
     }
 
@@ -177,10 +175,6 @@ public class Settings extends Fragment {
 
         Context c;
 
-        public UPDATEDATA(Context ctx) {
-            this.c = ctx;
-        }
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -188,8 +182,6 @@ public class Settings extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-           String method = params[0];
-           if(method.equals("update data")){
 
                try {
                    URL url = new URL(update_url);
@@ -225,7 +217,7 @@ public class Settings extends Fragment {
                } catch (IOException e) {
                    e.printStackTrace();
                }
-           }
+
             return response;
         }
 
