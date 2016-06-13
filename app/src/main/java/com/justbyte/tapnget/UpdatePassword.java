@@ -144,7 +144,7 @@ public class UpdatePassword extends AppCompatActivity {
          protected void onPostExecute(String s) {
              if (s.equals("nullUPDATED<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
                  check = true;
-                 Snackbar.make(v,"Password Updated!",Snackbar.LENGTH_SHORT);
+                 Toast.makeText(c,"Password Updated!",Toast.LENGTH_SHORT);
                  saveData(getString(R.string.myPrefPassword), changed_password);
              }
              else if(s.equals("nullCould not Update<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
