@@ -120,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+
             try {
                 URL url = new URL(forgot_pass_url);
                 HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();
