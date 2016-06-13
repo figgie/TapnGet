@@ -287,10 +287,13 @@ public class Settings extends Fragment {
         protected void onPostExecute(String s) {
             Boolean check = false;
 
-            if (s.equals("nullUPDATED\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+            String s1= s.substring(4,11);
+            String s2= s.substring(4,20);
+
+            if (s1.equals("UPDATED")){
                 check = true;
             }
-            else if(s.equals("nullCould not Update\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->\"")){
+            else if(s2.equals("Could not Update")){
                 check= false;
             }
 
@@ -356,10 +359,13 @@ public class Settings extends Fragment {
 
             boolean check = false;
 
-            if (s.equals("nullUPDATED<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+            String s1= s.substring(4,11);
+            String s2= s.substring(4,20);
+
+            if (s1.equals("UPDATED")){
                 check = true;
             }
-            else if(s.equals("nullCould not Update<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+            else if(s2.equals("Could not Update")){
                 check= false;
             }
 
