@@ -113,15 +113,15 @@ public class Settings extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isUpdate = updateData();
+                updateData();
 
-                if (isUpdate) {
+                if (check) {
                     saveData(getString(R.string.myPrefUserName), userName.getText().toString());
                     saveData(getString(R.string.myPrefNumber), phone.getText().toString());
 
                     Snackbar.make(view, "Updated!", Snackbar.LENGTH_SHORT).show();
 
-                } else if (!isUpdate) {
+                } else if (!check) {
                     userName.setText(getData(getString(R.string.myPrefUserName)));
                     phone.setText(getData(getString(R.string.myPrefNumber)));
 
@@ -149,14 +149,13 @@ public class Settings extends Fragment {
     }
 
 
-    private boolean updateData() {
+    private void updateData() {
         //Update the user's data on the database
         //call class instance
         String method = "update data";
         UPDATEDATA updatedata = new UPDATEDATA(ctx);
         updatedata.execute(method);
         //if not successful then return false
-        return check;
     }
 
 
@@ -237,10 +236,10 @@ public class Settings extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            if (s.equals("nullUPDATED\t")){
+            if (s.equals("nullUPDATED\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
              check = true;
             }
-            else if(s.equals("nullCould not Update\t")){
+            else if(s.equals("nullCould not Update\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->\"")){
                 check= false;
             }
         }

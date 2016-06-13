@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class UpdatePassword extends AppCompatActivity {
     Context ctx;
     String userCollegeID, line="", response= null;
     String upd,cupd;
+    View v;
     boolean check;
 
 
@@ -64,19 +66,9 @@ public class UpdatePassword extends AppCompatActivity {
 
                     new UPDATEPASSWORD().execute();
 
-                    if (check) {
-                        saveData(getString(R.string.myPrefPassword), changed_password);
-                        Toast.makeText(ctx, "Password Updated", Toast.LENGTH_LONG);
-                        Intent i = new Intent(ctx, MainActivity.class);
-                        startActivity(i);
-                    } else {
-                        Toast.makeText(ctx, "Could not update.Try again!", Toast.LENGTH_LONG).show();
-                    }
                 }
             }
         });
-
-
     }
 
 
@@ -150,11 +142,14 @@ public class UpdatePassword extends AppCompatActivity {
 
          @Override
          protected void onPostExecute(String s) {
-             if (s.equals("nullUPDATED\t")){
+             if (s.equals("nullUPDATED<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
                  check = true;
+                 Snackbar.make(v,"Password Updated!",Snackbar.LENGTH_SHORT);
+                 saveData(getString(R.string.myPrefPassword), changed_password);
              }
-             else if(s.equals("nullCould not Update\t")){
+             else if(s.equals("nullCould not Update<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
                  check= false;
+                 Toast.makeText(ctx, "Could not update.Try again!", Toast.LENGTH_LONG).show();
              }
          }
      }
