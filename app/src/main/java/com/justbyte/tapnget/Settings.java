@@ -49,7 +49,6 @@ public class Settings extends Fragment {
     String userPassword;
     String userCollegeID;
 
-    String line="", response = null;
 
     public Settings() {
 
@@ -229,6 +228,7 @@ public class Settings extends Fragment {
 
     class UPDATEDATA extends AsyncTask<String, Void, String> {
 
+        String line="", response = null;
 
         @Override
         protected void onPreExecute() {
@@ -303,6 +303,7 @@ public class Settings extends Fragment {
 
     class UPDATEPASSWORD extends AsyncTask<String, Void, String> {
 
+        String line="", response = null;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
