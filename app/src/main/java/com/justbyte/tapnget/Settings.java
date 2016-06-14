@@ -238,7 +238,7 @@ public class Settings extends Fragment {
         @Override
         protected String doInBackground(String... params) {
 
-            String updateData_url = "http://www.learnapk.netai.net/update_data.php";
+            String updateData_url = "http://www.tapnget.co.in/update_data.php";
 
             try {
                    URL url = new URL(updateData_url);
@@ -287,13 +287,10 @@ public class Settings extends Fragment {
         protected void onPostExecute(String s) {
             Boolean check = false;
 
-            String s1= s.substring(4,11);
-            String s2= s.substring(4,20);
-
-            if (s1.equals("UPDATED")){
+            if (s.equals("nullUPDATED\t")){
                 check = true;
             }
-            else if(s2.equals("Could not Update")){
+            else if(s.equals("nullCould not Update\t")){
                 check= false;
             }
 
@@ -312,7 +309,7 @@ public class Settings extends Fragment {
         @Override
         protected String doInBackground(String... params) {
 
-            String updatepwd_url = "http://learnapk.netai.net/update_password.php";
+            String updatepwd_url = "http://www.tapnget.co.in/update_password.php";
 
             try {
                 URL url = new URL(updatepwd_url);
@@ -360,13 +357,10 @@ public class Settings extends Fragment {
 
             boolean check = false;
 
-            String s1= s.substring(4,11);
-            String s2= s.substring(4,20);
-
-            if (s1.equals("UPDATED")){
+            if (s.equals("nullUPDATED")){
                 check = true;
             }
-            else if(s2.equals("Could not Update")){
+            else if(s.equals("nullCould not Update")){
                 check= false;
             }
 

@@ -35,8 +35,8 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
     protected String doInBackground(String... params) {
 
         String line="",response=null;
-        String reg_url= "http://www.learnapk.netai.net/register.php";
-        String login_url= "http://www.learnapk.netai.net/login.php";
+        String reg_url= "http://www.tapnget.co.in/register.php";
+        String login_url= "http://www.tapnget.co.in/login.php";
         String method = params[0];
         if(method.equals("Register")){
 
@@ -125,16 +125,15 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        if(result.equals("nullRegistration Success<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
-
+        if(result.equals("nullRegistration Success")){
             Toast.makeText(ctx,"Registration Success...",Toast.LENGTH_LONG).show();
         }
-        else if(result.equals("nullLogin Failed... Try again!\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+        else if(result.equals("nullLogin Failed... Try again!")){
             Toast.makeText(ctx,"Login Failed Try again!",Toast.LENGTH_LONG).show();
 
         }
 
-        else if(result.equals("nullLogin Success...\t<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->")){
+        else if(result.equals("nullLogin Success...")){
             Toast.makeText(ctx,"Login Success...",Toast.LENGTH_LONG).show();
             Intent i = new Intent(ctx, MainActivity.class);
             i.putExtra("1stmssg",uname);
@@ -142,7 +141,7 @@ public class BackgroundTask extends AsyncTask<String,Void,String> {
             ctx.startActivity(i);
 
         }
-        else if(result.equals("nullRegistration Failed. User Exists<!-- Hosting24 Analytics Code --><script type=\"text/javascript\" src=\"http://stats.hosting24.com/count.php\"></script><!-- End Of Analytics Code -->"))
+        else if(result.equals("nullRegistration Failed. User Exists"))
             Toast.makeText(ctx,"Registration Failed. User Exists.\nPlease Try Again!",Toast.LENGTH_SHORT).show();
     }
 }

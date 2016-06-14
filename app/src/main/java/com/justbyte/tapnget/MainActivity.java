@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            json_url="http://learnapk.netai.net/jsonretrieve.php";
+            json_url="http://www.tapnget.co.in/jsonretrieve.php";
         }
 
         @Override

@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
     class forgotpass extends AsyncTask<String,Void,String>{
 
-       String forgot_pass_url = "http://www.learnapk.netai.net/forgot_password.php"; //Still need to work on php script.
+       String forgot_pass_url = "http://www.tapnget.co.in/forgot_password.php"; //Still need to work on php script.
 
         @Override
         protected String doInBackground(String... params) {
