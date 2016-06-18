@@ -1,11 +1,15 @@
 package com.justbyte.tapnget;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,8 +26,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class Upload extends Fragment {
 
@@ -125,8 +141,56 @@ public class Upload extends Fragment {
                 e.printStackTrace();
             }
         }
+        String encodeFileToBase64 = null;
+        String path = uri.getPath();
+        try {
+            encodeFileToBase64 = encodeFileToBase64Binary(uri);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new upload(encodeFileToBase64,path);
 
     }
+
+    class upload extends AsyncTask<String,Void,String>{
+
+       String encodeFileToBase64,path;
+        public upload(String encodeFileToBase64, String path) {
+
+            this.encodeFileToBase64=encodeFileToBase64;
+            this.path=path;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
+
+    private String encodeFileToBase64Binary(Uri uri)throws IOException {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(new File(uri.getPath()));
+            byte[] buf = new byte[1024];
+            int n;
+            while (-1 != (n = fis.read(buf)))
+                baos.write(buf, 0, n);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        byte[] bbytes = baos.toByteArray();
+            byte[] encoded = Base64.encode(bbytes,Base64.DEFAULT);
+            String encodedString = new String(encoded);
+            return encodedString;
+    }
+
 
     private void expandFAB() {
 
@@ -160,4 +224,5 @@ public class Upload extends Fragment {
 
 
     }
+
 }
