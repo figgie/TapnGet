@@ -10,7 +10,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.provider.*;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
@@ -26,6 +27,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -40,6 +44,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class Upload extends Fragment {
 
@@ -152,6 +157,19 @@ public class Upload extends Fragment {
 
     }
 
+
+    private void saveData(String dataTitle, String dataValue) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.putString(dataTitle, dataValue);
+        edit.apply();
+    }
+
+    private String getData(String dataTitle) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        return sharedPreferences.getString(dataTitle, "");
+    }
     class upload extends AsyncTask<String,Void,String>{
 
        String encodeFileToBase64,path;
@@ -163,7 +181,46 @@ public class Upload extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            return null;
+            String upload_url = "http://www.tapnget.co.in/upload.php";
+            String line = "", response = null;
+            String userCollegeID = getData(getString(R.string.myPrefCollegeID));
+            try {
+                URL url = new URL(upload_url);
+                HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.setDoOutput(true);
+                httpURLConnection.setDoInput(true);
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+               JSONObject jsonObject = new JSONObject();
+                jsonObject.put("imageString", encodeFileToBase64);
+                jsonObject.put("imageName", path);
+                String data = jsonObject.toString();
+
+                bufferedWriter.write(data);
+                bufferedWriter.flush();
+                bufferedWriter.close();
+                outputStream.close();
+
+                InputStream IS = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
+                while ((line = bufferedReader.readLine())!=null){
+                    response+=line;
+                }
+
+                bufferedReader.close();
+                IS.close();
+                httpURLConnection.disconnect();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return response;
         }
 
         @Override
@@ -171,6 +228,7 @@ public class Upload extends Fragment {
             super.onPostExecute(s);
         }
     }
+
 
     private String encodeFileToBase64Binary(Uri uri)throws IOException {
 
