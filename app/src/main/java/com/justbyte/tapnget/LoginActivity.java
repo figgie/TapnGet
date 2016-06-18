@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -38,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText username;
     EditText password;
     TextView signUp, forgot_password;
-    String uname,pwd,frgtpwd;
+    String uname,pwd;
     String line="",response=null;
     ViewGroup viewGroup;
 
@@ -108,62 +109,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void onclickforgotpassword(View view){
-        frgtpwd= forgot_password.getText().toString();
-        forgotpass fp = new forgotpass();
-        fp.execute();
-    }
+    public void onclickforgotpassword(View view) {
 
-    class forgotpass extends AsyncTask<String,Void,String>{
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto","tapnget.co.in@gmail.com",null));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT,"PASSWORD RESET");
+        emailIntent.putExtra(Intent.EXTRA_TEXT,"Kindly Reset My Password(make sure you are sending this email from your college gmail account in order for us to confirm that this is really you) \n College_id: \n");
+        startActivity(Intent.createChooser(emailIntent,"Send Mail"));
 
-       String forgot_pass_url = "http://www.tapnget.co.in/forgot_password.php"; //Still need to work on php script.
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            try {
-                URL url = new URL(forgot_pass_url);
-                HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-                OutputStream OS = httpURLConnection.getOutputStream();
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS,"UTF-8"));
-                String data = URLEncoder.encode("user_username","UTF-8")+"="+URLEncoder.encode(frgtpwd,"UTF-8");
-                bufferedWriter.write(data);
-                bufferedWriter.flush();
-                bufferedWriter.close();
-                OS.close();
-                InputStream IS = httpURLConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
-                while ((line = bufferedReader.readLine())!=null){
-                    response+=line;
-                }
-
-                IS.close();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return response;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(String aVoid) {
-            super.onPostExecute(aVoid);
-        }
     }
 
     @Override

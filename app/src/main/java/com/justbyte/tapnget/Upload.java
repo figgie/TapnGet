@@ -3,11 +3,13 @@ package com.justbyte.tapnget;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class Upload extends Fragment {
@@ -92,7 +95,7 @@ public class Upload extends Fragment {
                 Intent intent = new Intent();
                 intent.setType("application/pdf");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"),1);
+                startActivityForResult(Intent.createChooser(intent,"Select Document"),1);
             }
         });
 
@@ -110,9 +113,10 @@ public class Upload extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Uri uri = null;
         if (requestCode == 1 && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
 
-            Uri uri = data.getData();
+            uri = data.getData();
 
             try {
                 Log.w("IV", uri.getPath());
@@ -121,6 +125,7 @@ public class Upload extends Fragment {
                 e.printStackTrace();
             }
         }
+
     }
 
     private void expandFAB() {
