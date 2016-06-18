@@ -199,7 +199,6 @@ public class Upload extends Fragment {
                 jsonObject.put("imageString", encodeFileToBase64);
                 jsonObject.put("imageName", path);
                 String data = jsonObject.toString();
-
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
