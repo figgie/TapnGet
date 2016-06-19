@@ -191,6 +191,7 @@ public class Upload extends Fragment {
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
                 httpURLConnection.setRequestProperty("Content-Type", "application/json");
+                httpURLConnection.setRequestProperty("Accept", "application/json");
                 httpURLConnection.setRequestProperty("charset", "utf-8");
                 httpURLConnection.setUseCaches (false);
                 OutputStream outputStream = httpURLConnection.getOutputStream();
