@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText password;
     TextView signUp, forgot_password;
     String uname,pwd;
-    String line="",response=null;
     ViewGroup viewGroup;
 
     @Override
