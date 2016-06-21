@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -27,14 +28,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,6 +47,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -97,16 +103,7 @@ public class Upload extends Fragment {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!FAB_Status) {
-                    //Display FAB menu
-                    expandFAB();
-                    FAB_Status = true;
-                } else {
-                    //Close FAB menu
-                    hideFAB();
-                    FAB_Status = false;
-                }
+            expandFAB();
             }
         });
 
@@ -138,23 +135,42 @@ public class Upload extends Fragment {
         if (requestCode == 1 && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
 
             uri = data.getData();
+            String uriString = uri.toString();
+            File myFile= null;
+            String encodeFileToBase64 = null;
+            String encode = "";
+            String displayName = "";
 
             try {
-                Log.w("IV", uri.getPath());
+                InputStream is = getActivity().getContentResolver().openInputStream(uri);
+                byte[] bytes = IOUtils.toByteArray(is);
+                encode = Base64.encodeToString(bytes,Base64.DEFAULT);
+                Log.e("e",encode);
 
-            } catch (Exception e) {
+            }catch (FileNotFoundException e){
+                e.printStackTrace();
+            }catch (IOException e){
                 e.printStackTrace();
             }
-        }
-        String encodeFileToBase64 = null;
-        String path = uri.getPath();
-        try {
-            encodeFileToBase64 = encodeFileToBase64Binary(uri);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        new upload(encodeFileToBase64,path);
 
+            if (uriString.startsWith("content://")) {
+                Cursor cursor = null;
+                try{
+                    cursor = getActivity().getContentResolver().query(uri,null,null,null,null);
+                    if(cursor != null && cursor.moveToFirst()){
+                        displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                }finally {
+                    cursor.close();
+                }
+
+            } else if (uriString.startsWith("file://")) {
+                displayName = myFile.getName();
+            }
+
+            //new upload(encode, path);
+            //Name of the file -> 'displayName' .... Encoded string is 'encode'
+        }
     }
 
 
@@ -170,6 +186,7 @@ public class Upload extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
         return sharedPreferences.getString(dataTitle, "");
     }
+
     class upload extends AsyncTask<String,Void,String>{
 
        String encodeFileToBase64,path;
@@ -222,23 +239,28 @@ public class Upload extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
+            Log.e("IV",response);
             return response;
         }
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
         }
     }
 
 
-    private String encodeFileToBase64Binary(Uri uri)throws IOException {
+   // private String encodeFileToBase64Binary(File file)throws IOException {
+        //int size = (int)file.length();
+
+
+        /*String path = uri.getPath();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         FileInputStream fis;
         try {
-            fis = new FileInputStream(new File(uri.getPath()));
+            fis = ;
             byte[] buf = new byte[1024];
             int n;
             while (-1 != (n = fis.read(buf)))
@@ -249,8 +271,8 @@ public class Upload extends Fragment {
         byte[] bbytes = baos.toByteArray();
             byte[] encoded = Base64.encode(bbytes,Base64.DEFAULT);
             String encodedString = new String(encoded);
-            return encodedString;
-    }
+            return encodedString;*/
+   // }
 
 
     private void expandFAB() {
