@@ -137,7 +137,6 @@ public class Upload extends Fragment {
             uri = data.getData();
             String uriString = uri.toString();
             File myFile= null;
-            String encodeFileToBase64 = null;
             String encode = "";
             String displayName = "";
 
@@ -168,32 +167,17 @@ public class Upload extends Fragment {
                 displayName = myFile.getName();
             }
 
-            //new upload(encode, path);
+            new upload(encode, displayName);
             //Name of the file -> 'displayName' .... Encoded string is 'encode'
         }
     }
-
-
-    private void saveData(String dataTitle, String dataValue) {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-
-        edit.putString(dataTitle, dataValue);
-        edit.apply();
-    }
-
-    private String getData(String dataTitle) {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
-        return sharedPreferences.getString(dataTitle, "");
-    }
-
     class upload extends AsyncTask<String,Void,String>{
 
-       String encodeFileToBase64,path;
-        public upload(String encodeFileToBase64, String path) {
+       String displayName,encode;
+        public upload(String encode,String displayName) {
 
-            this.encodeFileToBase64=encodeFileToBase64;
-            this.path=path;
+            this.displayName=displayName;
+            this.encode=encode;
         }
 
         @Override
@@ -214,8 +198,9 @@ public class Upload extends Fragment {
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("imageString", encodeFileToBase64);
-                jsonObject.put("imageName", path);
+                jsonObject.put("imageString", encode);
+                jsonObject.put("imageName",displayName);
+                jsonObject.put("college_id",userCollegeID);
                 String data = jsonObject.toString();
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
@@ -274,6 +259,19 @@ public class Upload extends Fragment {
             return encodedString;*/
    // }
 
+
+    private void saveData(String dataTitle, String dataValue) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+
+        edit.putString(dataTitle, dataValue);
+        edit.apply();
+    }
+
+    private String getData(String dataTitle) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.myPref), Context.MODE_APPEND);
+        return sharedPreferences.getString(dataTitle, "");
+    }
 
     private void expandFAB() {
 
