@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.*;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
@@ -199,6 +200,7 @@ public class Upload extends Fragment {
                JSONObject jsonObject = new JSONObject();
                 jsonObject.put("imageString", encodeFileToBase64);
                 jsonObject.put("imageName", path);
+                jsonObject.put("college_id",userCollegeID);
                 String data = jsonObject.toString();
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
@@ -228,7 +230,15 @@ public class Upload extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+            //super.onPostExecute(s);
+            if (s.equals("nullFile Uploaded\t")){
+
+                Snackbar.make(view, "File Uploaded", Snackbar.LENGTH_LONG).show();
+            }
+            else if(s.equals("nullFile Upload Error. Try again.\t")){
+
+                Snackbar.make(view, "File Upload Error. Try Again.", Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
