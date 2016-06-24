@@ -54,7 +54,7 @@
                 android:id="@+id/register_username"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:textColor="@color/primary_text_alt"
+                android:textColor="#000000"
                 android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
@@ -73,7 +73,7 @@
                 android:id="@+id/register_password"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:textColor="@color/primary_text_alt"
+                android:textColor="#000000"
                 android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
@@ -93,7 +93,7 @@
                 android:id="@+id/register_college_id"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:textColor="@color/primary_text_alt"
+                android:textColor="#000000"
                 android:inputType="textNoSuggestions" />
 
         </android.support.design.widget.TextInputLayout>
@@ -112,7 +112,7 @@
                 android:id="@+id/register_number"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:textColor="@color/primary_text_alt"
+                android:textColor="#000000"
                 android:inputType="phone" />
 
         </android.support.design.widget.TextInputLayout>
