@@ -42,7 +42,7 @@
                     android:id="@+id/settings_userName"
                     android:text="Mayur"
                     android:singleLine="true"
-                    android:textColor="@color/primary_text_alt"/>
+                    android:textColor="#000000"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -63,7 +63,7 @@
                     android:id="@+id/settings_phone"
                     android:text="9636845223"
                     android:singleLine="true"
-                    android:textColor="@color/primary_text_alt"
+                    android:textColor="#000000"
                     android:inputType="phone" />
 
 
@@ -85,7 +85,7 @@
                     android:id="@+id/settings_email"
                     android:text="2015ucp1028@mnit.ac.in"
                     android:singleLine="true"
-                    android:textColor="@color/primary_text_alt"/>
+                    android:textColor="#000000"/>
 
 
             </android.support.design.widget.TextInputLayout>

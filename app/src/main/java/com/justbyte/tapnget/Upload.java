@@ -167,45 +167,47 @@ public class Upload extends Fragment {
                 displayName = myFile.getName();
             }
 
-            new upload(encode, displayName);
+            upload up = new upload(this);
+            up.execute(encode,displayName);
+            //new upload(encode, displayName);
             //Name of the file -> 'displayName' .... Encoded string is 'encode'
         }
     }
     class upload extends AsyncTask<String,Void,String>{
 
-       String displayName,encode;
-        public upload(String encode,String displayName) {
+        String displayName,encode;
 
-            this.displayName=displayName;
-            this.encode=encode;
+        Upload upload;
+        public upload(Upload upload) {
+            this.upload= upload;
         }
+
 
         @Override
         protected String doInBackground(String... params) {
+            encode = params[0];
+            displayName = params[1];
             String upload_url = "http://www.tapnget.co.in/upload.php";
             String line = "", response = null;
             String userCollegeID = getData(getString(R.string.myPrefCollegeID));
             try {
                 URL url = new URL(upload_url);
-                HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();
+                HttpURLConnection httpURLConnection =(HttpURLConnection)url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
-                httpURLConnection.setRequestProperty("Content-Type", "application/json");
-                httpURLConnection.setRequestProperty("Accept", "application/json");
-                httpURLConnection.setRequestProperty("charset", "utf-8");
-                httpURLConnection.setUseCaches (false);
                 OutputStream outputStream = httpURLConnection.getOutputStream();
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
-               JSONObject jsonObject = new JSONObject();
-                jsonObject.put("imageString", encode);
-                jsonObject.put("imageName",displayName);
-                jsonObject.put("college_id",userCollegeID);
-                String data = jsonObject.toString();
+
+                String data = URLEncoder.encode("college_id","UTF-8")+"="+URLEncoder.encode(userCollegeID,"UTF-8")+"&"+
+                        URLEncoder.encode("displayname","UTF-8")+"="+URLEncoder.encode(displayName,"UTF-8")+"&"+
+                        URLEncoder.encode("encodestring","UTF-8")+"="+URLEncoder.encode(encode,"UTF-8");
+
                 bufferedWriter.write(data);
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
+
                 InputStream IS = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
                 while ((line = bufferedReader.readLine())!=null){
@@ -215,12 +217,9 @@ public class Upload extends Fragment {
                 bufferedReader.close();
                 IS.close();
                 httpURLConnection.disconnect();
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
                 e.printStackTrace();
             }
             Log.e("IV",response);
@@ -234,8 +233,37 @@ public class Upload extends Fragment {
         }
     }
 
+/**** HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();
+ httpURLConnection.setRequestMethod("POST");
+ httpURLConnection.setDoOutput(true);
+ httpURLConnection.setDoInput(true);
+ httpURLConnection.setRequestProperty("Content-Type", "application/json");
+ httpURLConnection.setRequestProperty("Accept", "application/json");
+ httpURLConnection.setRequestProperty("charset", "utf-8");
+ httpURLConnection.setUseCaches (false);
+ OutputStream outputStream = httpURLConnection.getOutputStream();
+ BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream,"UTF-8"));
+ JSONObject jsonObject = new JSONObject();
+ jsonObject.put("imageString", encode);
+ jsonObject.put("imageName",displayName);
+ jsonObject.put("college_id",userCollegeID);
+ String data = jsonObject.toString();
+ bufferedWriter.write(data);
+ bufferedWriter.flush();
+ bufferedWriter.close();
+ outputStream.close();
 
-   // private String encodeFileToBase64Binary(File file)throws IOException {
+ InputStream IS = httpURLConnection.getInputStream();
+ BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
+ while ((line = bufferedReader.readLine())!=null){
+ response+=line;
+ }
+
+ bufferedReader.close();
+ IS.close();
+ httpURLConnection.disconnect();
+****/
+ // private String encodeFileToBase64Binary(File file)throws IOException {
         //int size = (int)file.length();
 
 
