@@ -206,7 +206,6 @@ public class Upload extends Fragment {
                 bufferedWriter.flush();
                 bufferedWriter.close();
                 outputStream.close();
-
                 InputStream IS = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(IS,"iso-8859-1"));
                 while ((line = bufferedReader.readLine())!=null){
