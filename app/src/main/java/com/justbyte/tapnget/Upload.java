@@ -1,6 +1,7 @@
 package com.justbyte.tapnget;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.os.Environment;
 import android.provider.*;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
@@ -37,6 +39,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -139,6 +142,7 @@ public class Upload extends Fragment {
             File myFile= null;
             String encode = "";
             String displayName = "";
+            String path = uri.getPath();
 
             try {
                 InputStream is = getActivity().getContentResolver().openInputStream(uri);
@@ -167,13 +171,170 @@ public class Upload extends Fragment {
                 displayName = myFile.getName();
             }
 
-            upload up = new upload(this);
-            up.execute(encode,displayName);
+
+            new UploadToServer(path,displayName);
+         //   upload up = new upload(this);
+         //   up.execute(encode,displayName);
             //new upload(encode, displayName);
             //Name of the file -> 'displayName' .... Encoded string is 'encode'
         }
     }
-    class upload extends AsyncTask<String,Void,String>{
+
+    public class UploadToServer extends AsyncTask<Void,Void,Void> {
+        String path,displayName;
+        public UploadToServer(String path,String displayName){
+            this.path=path;
+            this.displayName=displayName;
+        }
+
+        int serverResponseCode = 0;
+        ProgressDialog dialog = null;
+
+        String upLoadServerUri ="http://www.tapnget.co.in/upload.php";
+
+        public int uploadFile(String sourceFileUri){
+
+            String fileName = sourceFileUri;
+
+            HttpURLConnection conn = null;
+            DataOutputStream dos = null;
+            String lineEnd = "\r\n";
+            String twoHyphens = "--";
+            String boundary = "*****";
+            int bytesRead, bytesAvailable, bufferSize;
+            byte[] buffer;
+            int maxBufferSize = 1 * 1024 * 1024;
+            File sourceFile = new File(sourceFileUri);
+
+            if (!sourceFile.isFile()) {
+
+                dialog.dismiss();
+
+                Log.e("uploadFile", "Source File not exist :"
+                        +path + "" + displayName);
+
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Snackbar.make(view,"Source file doesnot exist",Snackbar.LENGTH_LONG).show();
+                    }
+                });
+
+                return 0;
+
+            }
+            else
+            {
+                try {
+
+                    // open a URL connection to the Servlet
+                    FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                    URL url = new URL(upLoadServerUri);
+
+                    // Open a HTTP  connection to  the URL
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true); // Allow Inputs
+                    conn.setDoOutput(true); // Allow Outputs
+                    conn.setUseCaches(false); // Don't use a Cached Copy
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Connection", "Keep-Alive");
+                    conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                    conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                    conn.setRequestProperty("uploaded_file", fileName);
+
+                    dos = new DataOutputStream(conn.getOutputStream());
+
+                    dos.writeBytes(twoHyphens + boundary + lineEnd);
+                    dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ fileName + "\"" + lineEnd);
+
+                            dos.writeBytes(lineEnd);
+
+                    // create a buffer of  maximum size
+                    bytesAvailable = fileInputStream.available();
+
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    buffer = new byte[bufferSize];
+
+                    // read file and write it into form...
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    while (bytesRead > 0) {
+
+                        dos.write(buffer, 0, bufferSize);
+                        bytesAvailable = fileInputStream.available();
+                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                    }
+
+                    // send multipart form data necesssary after file data...
+                    dos.writeBytes(lineEnd);
+                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+                    // Responses from the server (code and message)
+                    serverResponseCode = conn.getResponseCode();
+                    String serverResponseMessage = conn.getResponseMessage();
+
+                    Log.i("uploadFile", "HTTP Response is : "
+                            + serverResponseMessage + ": " + serverResponseCode);
+
+                    if(serverResponseCode == 200){
+
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                Toast.makeText(UploadToServer.this, "File Upload Complete.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    //close the streams //
+                    fileInputStream.close();
+                    dos.flush();
+                    dos.close();
+
+                } catch (MalformedURLException ex) {
+
+                    dialog.dismiss();
+                    ex.printStackTrace();
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(UploadToServer.this, "MalformedURLException",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+                } catch (Exception e) {
+
+                    dialog.dismiss();
+                    e.printStackTrace();
+
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(UploadToServer.this, "Got Exception : see logcat ",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    Log.e("Upload file to server Exception", "Exception : "+ e.getMessage(), e);
+                }
+                dialog.dismiss();
+                return serverResponseCode;
+
+            } // End else block
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+    }
+
+
+
+
+
+    /**  class upload extends AsyncTask<String,Void,String>{
 
         String displayName,encode;
 
@@ -228,10 +389,10 @@ public class Upload extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+            Toast.makeText(getContext(),s,Toast.LENGTH_LONG).show();
 
         }
-    }
+    }***/
 
 /**** HttpURLConnection httpURLConnection =(HttpURLConnection) url.openConnection();
  httpURLConnection.setRequestMethod("POST");
