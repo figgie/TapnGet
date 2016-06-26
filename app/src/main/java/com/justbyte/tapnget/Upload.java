@@ -172,7 +172,8 @@ public class Upload extends Fragment {
             }
 
 
-            new UploadToServer(path,displayName);
+            UploadToServer uploadToServer = new UploadToServer();
+            uploadToServer.execute(path,displayName);
          //   upload up = new upload(this);
          //   up.execute(encode,displayName);
             //new upload(encode, displayName);
@@ -180,156 +181,119 @@ public class Upload extends Fragment {
         }
     }
 
-    public class UploadToServer extends AsyncTask<Void,Void,Void> {
-        String path,displayName;
-        public UploadToServer(String path,String displayName){
-            this.path=path;
-            this.displayName=displayName;
-        }
-
+public class UploadToServer extends AsyncTask<String,Void,String>{
+    @Override
+    protected String doInBackground(String... params) {
+        String path=params[0];
+        String displayName=params[1];
+        String upload_url = "http://www.tapnget.co.in/upload.php";
+        String line = "", response = null;
+        String userCollegeID = getData(getString(R.string.myPrefCollegeID));
+        String fileName = path;
         int serverResponseCode = 0;
-        ProgressDialog dialog = null;
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+        File sourceFile = new File(path);
 
-        String upLoadServerUri ="http://www.tapnget.co.in/upload.php";
+        if (!sourceFile.isFile()) {
 
-        public int uploadFile(String sourceFileUri){
+            Log.e("uploadFile", "Source File not exist :"+path);
 
-            String fileName = sourceFileUri;
+            return "0";
 
-            HttpURLConnection conn = null;
-            DataOutputStream dos = null;
-            String lineEnd = "\r\n";
-            String twoHyphens = "--";
-            String boundary = "*****";
-            int bytesRead, bytesAvailable, bufferSize;
-            byte[] buffer;
-            int maxBufferSize = 1 * 1024 * 1024;
-            File sourceFile = new File(sourceFileUri);
+        }
+        else
+        {
+            try {
 
-            if (!sourceFile.isFile()) {
+                // open a URL connection to the Servlet
+                FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                URL url = new URL(upload_url);
 
-                dialog.dismiss();
+                // Open a HTTP  connection to  the URL
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setDoInput(true); // Allow Inputs
+                conn.setDoOutput(true); // Allow Outputs
+                conn.setUseCaches(false); // Don't use a Cached Copy
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                conn.setRequestProperty("uploaded_file", fileName);
 
-                Log.e("uploadFile", "Source File not exist :"
-                        +path + "" + displayName);
+                dos = new DataOutputStream(conn.getOutputStream());
 
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Snackbar.make(view,"Source file doesnot exist",Snackbar.LENGTH_LONG).show();
-                    }
-                });
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ fileName + "\"" + lineEnd);
 
-                return 0;
+                        dos.writeBytes(lineEnd);
 
-            }
-            else
-            {
-                try {
+                // create a buffer of  maximum size
+                bytesAvailable = fileInputStream.available();
 
-                    // open a URL connection to the Servlet
-                    FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                    URL url = new URL(upLoadServerUri);
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                buffer = new byte[bufferSize];
 
-                    // Open a HTTP  connection to  the URL
-                    conn = (HttpURLConnection) url.openConnection();
-                    conn.setDoInput(true); // Allow Inputs
-                    conn.setDoOutput(true); // Allow Outputs
-                    conn.setUseCaches(false); // Don't use a Cached Copy
-                    conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Connection", "Keep-Alive");
-                    conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-                    conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                    conn.setRequestProperty("uploaded_file", fileName);
+                // read file and write it into form...
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-                    dos = new DataOutputStream(conn.getOutputStream());
+                while (bytesRead > 0) {
 
-                    dos.writeBytes(twoHyphens + boundary + lineEnd);
-                    dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""+ fileName + "\"" + lineEnd);
-
-                            dos.writeBytes(lineEnd);
-
-                    // create a buffer of  maximum size
+                    dos.write(buffer, 0, bufferSize);
                     bytesAvailable = fileInputStream.available();
-
                     bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    buffer = new byte[bufferSize];
-
-                    // read file and write it into form...
                     bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-                    while (bytesRead > 0) {
-
-                        dos.write(buffer, 0, bufferSize);
-                        bytesAvailable = fileInputStream.available();
-                        bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                    }
-
-                    // send multipart form data necesssary after file data...
-                    dos.writeBytes(lineEnd);
-                    dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-                    // Responses from the server (code and message)
-                    serverResponseCode = conn.getResponseCode();
-                    String serverResponseMessage = conn.getResponseMessage();
-
-                    Log.i("uploadFile", "HTTP Response is : "
-                            + serverResponseMessage + ": " + serverResponseCode);
-
-                    if(serverResponseCode == 200){
-
-                        runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(UploadToServer.this, "File Upload Complete.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-
-                    //close the streams //
-                    fileInputStream.close();
-                    dos.flush();
-                    dos.close();
-
-                } catch (MalformedURLException ex) {
-
-                    dialog.dismiss();
-                    ex.printStackTrace();
-
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(UploadToServer.this, "MalformedURLException",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-                    Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
-                } catch (Exception e) {
-
-                    dialog.dismiss();
-                    e.printStackTrace();
-
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(UploadToServer.this, "Got Exception : see logcat ",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    Log.e("Upload file to server Exception", "Exception : "+ e.getMessage(), e);
                 }
-                dialog.dismiss();
-                return serverResponseCode;
 
-            } // End else block
-        }
+                // send multipart form data necesssary after file data...
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
+                // Responses from the server (code and message)
+                serverResponseCode = conn.getResponseCode();
+                String serverResponseMessage = conn.getResponseMessage();
+
+                Log.i("uploadFile", "HTTP Response is : "
+                        + serverResponseMessage + ": " + serverResponseCode);
+
+                if(serverResponseCode == 200){
+
+                    Toast.makeText(getContext(), "File Upload Complete.",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                //close the streams //
+                fileInputStream.close();
+                dos.flush();
+                dos.close();
+
+            } catch (MalformedURLException ex) {
+
+                ex.printStackTrace();
+                Toast.makeText(getContext(), "MalformedURLException",
+                        Toast.LENGTH_SHORT).show();
+                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+                Toast.makeText(getContext(), "Got Exception : see logcat ",
+                        Toast.LENGTH_SHORT).show();
+                Log.e("Upload file to server Exception", "Exception : "
+                        + e.getMessage(), e);
+            }
+
+        } // End else block
+        return null;
     }
-
+}
 
 
 
